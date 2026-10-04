@@ -6,7 +6,8 @@
   <title>Q-learning na prática: como um agente aprende por tentativa e erro</title>
   <meta name="description" content="Introdução ao aprendizado por reforço com Q-learning, explicada com código Python e o ambiente FrozenLake.">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" id="prism-dark-theme">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" id="prism-light-theme" disabled>
 </head>
 <body>
 
@@ -19,6 +20,10 @@
     <a href="#autores">Autores</a>
   </nav>
 </header>
+
+<button id="theme-toggle" class="theme-toggle" aria-label="Alternar tema claro/escuro" title="Alternar tema">
+  <span class="theme-icon">🌙</span>
+</button>
 
 <main>
 <article>
@@ -265,8 +270,8 @@ for ep in range(episodios):
       <div class="cartao">
         <img src="images/diogo.jpg" alt="Foto de Diogo Gomes Barbosa" width="96" height="96">
         <h3>Diogo Gomes Barbosa</h3>
-        <p>Curso, Xº semestre. Interesse em [área de interesse].</p>
-        <p class="perfis"><a href="https://github.com/USUARIO">GitHub</a> · <a href="https://www.linkedin.com/in/USUARIO">LinkedIn</a></p>
+        <p>Sistemas de Informação, Penultimo Semestre 7/8. Interesse em Desenvolveimnto Full-Stack e Dados.</p>
+        <p class="perfis"><a href="https://github.com/DiogoGomesB">GitHub</a> · <a href="https://www.linkedin.com/in/diogo-gomesb/?isSelfProfile=true">LinkedIn</a></p>
       </div>
       <div class="cartao">
         <img src="images/eudenis.jpg" alt="Foto de Eudenis de Souza Vieira" width="96" height="96">
@@ -301,5 +306,45 @@ for ep in range(episodios):
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script>
+  (function() {
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = themeToggle.querySelector('.theme-icon');
+    const html = document.documentElement;
+    const prismDarkTheme = document.getElementById('prism-dark-theme');
+    const prismLightTheme = document.getElementById('prism-light-theme');
+
+    // Recuperar tema salvo ou usar preferência do sistema
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+
+    // Aplicar tema inicial
+    function applyTheme(dark) {
+      if (dark) {
+        html.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+        prismDarkTheme.disabled = false;
+        prismLightTheme.disabled = true;
+      } else {
+        html.setAttribute('data-theme', 'light');
+        themeIcon.textContent = '🌙';
+        prismDarkTheme.disabled = true;
+        prismLightTheme.disabled = false;
+      }
+    }
+
+    applyTheme(isDark);
+
+    // Alternar tema ao clicar
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      applyTheme(newTheme === 'dark');
+      localStorage.setItem('theme', newTheme);
+    });
+  })();
+</script>
 </body>
 </html>

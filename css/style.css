@@ -10,18 +10,16 @@
   --objetivo: #2e8b57;
   --largura: 72ch;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --fundo: #15181c;
-    --texto: #e6e8eb;
-    --suave: #9aa4ae;
-    --destaque: #78aeff;
-    --borda: #30363d;
-    --caixa: #1f242a;
-    --gelo: #24384a;
-    --buraco: #0b0d10;
-    --objetivo: #2f8f5b;
-  }
+[data-theme="dark"] {
+  --fundo: #15181c;
+  --texto: #e6e8eb;
+  --suave: #9aa4ae;
+  --destaque: #78aeff;
+  --borda: #30363d;
+  --caixa: #1f242a;
+  --gelo: #24384a;
+  --buraco: #0b0d10;
+  --objetivo: #2f8f5b;
 }
 
 * { box-sizing: border-box; }
@@ -31,6 +29,7 @@ body {
   background: var(--fundo);
   color: var(--texto);
   font: 1.0625rem/1.7 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 a { color: var(--destaque); }
 img, svg { max-width: 100%; height: auto; }
@@ -48,6 +47,50 @@ img, svg { max-width: 100%; height: auto; }
 .topo nav { display: flex; flex-wrap: wrap; gap: 1rem; font-size: .95rem; }
 .topo nav a { text-decoration: none; }
 .topo nav a:hover { text-decoration: underline; }
+.theme-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 100;
+  background: var(--caixa);
+  border: 1px solid var(--borda);
+  border-radius: 50%;
+  width: 3.5rem;
+  height: 3.5rem;
+  cursor: pointer;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.theme-toggle:hover {
+  background: var(--destaque);
+  border-color: var(--destaque);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+.theme-toggle:active {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.theme-icon {
+  line-height: 1;
+  transition: transform 0.3s ease;
+}
+.theme-toggle:hover .theme-icon {
+  transform: rotate(15deg) scale(1.15);
+}
+@media (max-width: 600px) {
+  .theme-toggle {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.3rem;
+  }
+}
 
 /* Conteúdo */
 main { padding: 0 1.25rem; }
