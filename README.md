@@ -38,6 +38,11 @@ Testado com Python 3.12, gymnasium 1.3.0, numpy 2.4.4 e matplotlib 3.10.8.
 
 ## Lighthouse (opcional)
 | Desempenho | Acessibilidade | Boas práticas | SEO |
+
+## Licença
+Texto e figuras sob CC BY 4.0. Código sob MIT (ver `LICENSE`).
+Fotos dos autores: publicadas com autorização, apenas neste projeto; não estão incluídas na licença CC BY.
+
 |---|---|---|---|
 | - | - | - | - |
 
