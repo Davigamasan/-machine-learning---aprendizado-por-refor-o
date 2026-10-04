@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Q-learning na prática: como um agente aprende por tentativa e erro</title>
+  <meta name="description" content="Introdução ao aprendizado por reforço com Q-learning, explicada com código Python e o ambiente FrozenLake.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+
+<header class="topo">
+  <a class="marca" href="#">Aprendizado por Reforço</a>
+  <nav aria-label="Navegação principal">
+    <a href="#conceito">Conceito</a>
+    <a href="#exemplo">Exemplo</a>
+    <a href="#erros">Erros comuns</a>
+    <a href="#autores">Autores</a>
+  </nav>
+</header>
+
+<main>
+<article>
+
+  <section class="abertura">
+    <h1>Q-learning na prática: como um agente aprende por tentativa e erro</h1>
+    <p class="resumo">Um guia para quem já programa e quer entender aprendizado por reforço: vamos treinar, em Python, um agente que aprende sozinho a atravessar um lago congelado, sem que ninguém lhe diga o caminho.</p>
+    <div class="autores-mini">
+      <div class="fotos">
+        <img src="images/davi.jpg" alt="Foto de Davi Gama dos Santos" width="44" height="44">
+        <img src="images/diogo.jpg" alt="Foto de Diogo Gomes Barbosa" width="44" height="44">
+        <img src="images/eudenis.jpg" alt="Foto de Eudenis de Souza Vieira" width="44" height="44">
+        <img src="images/gabriel.jpg" alt="Foto de Gabriel Januário Alves" width="44" height="44">
+        <img src="images/joao.jpg" alt="Foto de João Pedro Barreto da Silva" width="44" height="44">
+      </div>
+      <p>Por <a href="#autores">Davi Gama dos Santos, Diogo Gomes Barbosa, Eudenis de Souza Vieira, Gabriel Januário Alves e João Pedro Barreto da Silva</a><br>
+      <small>Publicado em <time datetime="2026-10-03">03/10/2026</time> · Revisado em <time datetime="2026-10-03">03/10/2026</time></small></p>
+    </div>
+  </section>
+
+  <nav class="indice" aria-label="Índice do artigo">
+    <h2>Neste artigo</h2>
+    <ol>
+      <li><a href="#introducao">O problema: aprender sem gabarito</a></li>
+      <li><a href="#conceito">Conceito: agente, ambiente e recompensa</a></li>
+      <li><a href="#como-funciona">Como funciona o Q-learning</a></li>
+      <li><a href="#exemplo">Exemplo prático: o FrozenLake</a></li>
+      <li><a href="#erros">Erros comuns e limitações</a></li>
+      <li><a href="#comecar">Como começar na área</a></li>
+      <li><a href="#links">Para ler depois</a></li>
+      <li><a href="#referencias">Referências</a></li>
+    </ol>
+  </nav>
+
+  <section id="introducao">
+    <h2>O problema: aprender sem gabarito</h2>
+    <p>Imagine ensinar um robô aspirador a limpar a casa. Você não tem uma planilha com "a resposta certa" para cada posição de cada móvel. O que você tem é um critério: limpou um cômodo, ótimo; bateu na parede ou ficou sem bateria longe da base, ruim.</p>
+    <p>Esse é o tipo de problema que o aprendizado supervisionado não resolve bem, porque ele depende de exemplos já rotulados. O <strong>aprendizado por reforço</strong> (em inglês, <em>reinforcement learning</em>, ou RL) parte de outra ideia: deixar o sistema tentar, dizer a ele se foi bem ou mal, e permitir que ele descubra a estratégia sozinho.</p>
+    <p><strong>Ao final deste artigo, vamos saber:</strong> o que são agente, ambiente, estado, ação e recompensa; como o algoritmo Q-learning transforma tentativas em uma estratégia; como treinar um agente em Python com poucas linhas; e por que esse método simples não escala para problemas grandes.</p>
+  </section>
+
+  <section id="conceito">
+    <h2>Conceito: agente, ambiente e recompensa</h2>
+    <p>Todo problema de aprendizado por reforço tem dois personagens. O <strong>agente</strong> é quem toma decisões (o robô, o jogador). O <strong>ambiente</strong> é tudo com que ele interage (a casa, o jogo). Os dois conversam em um ciclo:</p>
+
+    <figure>
+      <svg viewBox="0 0 600 220" role="img" aria-labelledby="fig1-titulo fig1-desc">
+        <title id="fig1-titulo">Ciclo agente-ambiente</title>
+        <desc id="fig1-desc">O agente envia uma ação ao ambiente; o ambiente devolve o novo estado e uma recompensa ao agente.</desc>
+        <defs><marker id="seta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="svg-traco-cheio"/></marker></defs>
+        <rect x="30" y="70" width="160" height="80" rx="12" class="svg-caixa"/>
+        <text x="110" y="116" text-anchor="middle" class="svg-texto-forte">Agente</text>
+        <rect x="410" y="70" width="160" height="80" rx="12" class="svg-caixa"/>
+        <text x="490" y="116" text-anchor="middle" class="svg-texto-forte">Ambiente</text>
+        <path d="M110,70 C110,20 490,20 490,66" class="svg-linha" marker-end="url(#seta)"/>
+        <text x="300" y="30" text-anchor="middle" class="svg-texto">ação</text>
+        <path d="M490,150 C490,200 110,200 110,154" class="svg-linha" marker-end="url(#seta)"/>
+        <text x="300" y="208" text-anchor="middle" class="svg-texto">novo estado + recompensa</text>
+      </svg>
+      <figcaption><strong>Figura 1.</strong> O ciclo do aprendizado por reforço. A cada passo, o agente age e o ambiente responde com a nova situação e uma nota pelo que aconteceu.</figcaption>
+    </figure>
+
+    <p>Vamos definir os termos que aparecem nesse ciclo:</p>
+    <dl class="glossario">
+      <dt>Estado</dt><dd>A descrição da situação atual. Em um jogo de tabuleiro, por exemplo, é a posição das peças.</dd>
+      <dt>Ação</dt><dd>Uma das escolhas que o agente pode fazer naquele momento.</dd>
+      <dt>Recompensa</dt><dd>Um número que o ambiente devolve após cada ação. Positivo é bom, negativo (ou zero) é ruim.</dd>
+      <dt>Episódio</dt><dd>Uma tentativa completa, do início até um final (vencer, perder ou esgotar o tempo).</dd>
+      <dt>Política</dt><dd>A estratégia do agente: uma regra que diz qual ação tomar em cada estado. É isso que queremos aprender.</dd>
+    </dl>
+    <p>O objetivo do agente não é ganhar a maior recompensa <em>agora</em>, e sim a maior recompensa <em>acumulada</em> ao longo do episódio. Às vezes é preciso dar uma volta maior para chegar ao objetivo sem cair num buraco.</p>
+  </section>
+
+  <section id="como-funciona">
+    <h2>Como funciona o Q-learning</h2>
+    <p>O Q-learning, proposto por Watkins em 1989 <a href="#ref-watkins" class="cit">[1]</a>, é um dos algoritmos mais simples de aprendizado por reforço. A ideia central é uma tabela, a <strong>tabela Q</strong>, com uma linha para cada estado e uma coluna para cada ação.</p>
+    <p>Cada célula guarda um palpite: <em>"se eu estiver neste estado e fizer esta ação, quanta recompensa espero acumular daqui em diante?"</em>. No começo, a tabela é toda zero, porque o agente não sabe nada. A cada passo, ele faz três coisas:</p>
+    <ol>
+      <li><strong>Escolhe uma ação.</strong> Quase sempre a de maior valor na tabela, mas, de vez em quando, uma aleatória. Essa pitada de acaso, controlada por um número chamado <strong>epsilon (ε)</strong>, garante que o agente continue explorando caminhos novos em vez de repetir para sempre o primeiro que deu certo.</li>
+      <li><strong>Observa o resultado:</strong> o novo estado e a recompensa.</li>
+      <li><strong>Corrige o palpite.</strong> Puxa o valor da célula um pouco na direção de "recompensa que acabei de ganhar + o melhor valor que espero a partir de onde estou agora".</li>
+    </ol>
+    <p>Repetindo isso milhares de vezes, a recompensa do objetivo vai "escorrendo" para trás, casa por casa, até que a tabela indique o melhor caminho a partir de qualquer ponto.</p>
+
+    <details class="aprofundamento">
+      <summary>Aprofundamento: a fórmula de atualização</summary>
+      <p class="formula">Q(s, a) ← Q(s, a) + α · [ r + γ · max<sub>a′</sub> Q(s′, a′) − Q(s, a) ]</p>
+      <ul>
+        <li><strong>s, a</strong>: estado atual e ação escolhida; <strong>s′</strong>: estado seguinte; <strong>r</strong>: recompensa recebida.</li>
+        <li><strong>α (alfa), taxa de aprendizado</strong>: entre 0 e 1. Quanto a nova experiência pesa em relação ao que já sabíamos.</li>
+        <li><strong>γ (gama), fator de desconto</strong>: entre 0 e 1. Quanto valorizamos recompensas futuras. Perto de 1, o agente é paciente.</li>
+        <li>O termo entre colchetes é o <strong>erro de diferença temporal</strong>: a distância entre o que esperávamos e o que acabamos de observar.</li>
+      </ul>
+      <p>O Q-learning é chamado de <em>off-policy</em> porque atualiza usando a melhor ação possível (o <em>max</em>), mesmo quando o agente, explorando, fez outra. O SARSA, seu parente próximo, usa a ação que o agente de fato vai tomar <a href="#ref-sutton" class="cit">[2]</a>.</p>
+    </details>
+  </section>
+
+  <section id="exemplo">
+    <h2>Exemplo prático: o FrozenLake</h2>
+    <p>Vamos usar o <strong>FrozenLake</strong>, um ambiente da biblioteca Gymnasium <a href="#ref-gymnasium" class="cit">[3]</a>. É uma grade 4×4: o agente começa em <code>S</code>, precisa chegar em <code>G</code> e não pode pisar nos buracos <code>H</code>. Ele só recebe recompensa 1 ao chegar ao objetivo; qualquer outro passo vale 0.</p>
+    <p>São 16 estados (as casas) e 4 ações (esquerda, baixo, direita, cima). Ou seja, nossa tabela Q terá 16 linhas e 4 colunas.</p>
+
+    <p class="versoes">Testado com: Python 3.12 · gymnasium 1.3.0 · numpy 2.4.4 · matplotlib 3.10.8</p>
+
+    <h3>Criando o ambiente</h3>
+<pre><code class="language-python">import gymnasium as gym
+import numpy as np
+
+# is_slippery=False: cada ação faz exatamente o que promete
+env = gym.make("FrozenLake-v1", map_name="4x4", is_slippery=False)
+
+n_estados = env.observation_space.n   # 16 casas
+n_acoes = env.action_space.n          # 4 direções
+Q = np.zeros((n_estados, n_acoes))    # o agente começa sem saber nada</code></pre>
+
+    <h3>O laço de treinamento</h3>
+<pre><code class="language-python">alpha, gamma = 0.1, 0.99           # taxa de aprendizado e desconto
+episodios = 2000
+rng = np.random.default_rng(42)
+
+for ep in range(episodios):
+    # epsilon cai de 1.0 até 0.05: explora muito no início, pouco no fim
+    eps = max(0.05, 1.0 - 0.95 * ep / (0.8 * episodios))
+    estado, _ = env.reset()
+    terminou = truncou = False
+
+    while not (terminou or truncou):
+        # 1. Escolher: ação aleatória com probabilidade eps, senão a melhor conhecida
+        if rng.random() &lt; eps:
+            acao = env.action_space.sample()
+        else:
+            acao = int(np.argmax(Q[estado]))
+
+        # 2. Agir e observar
+        novo_estado, recompensa, terminou, truncou, _ = env.step(acao)
+
+        # 3. Corrigir o palpite (se o episódio acabou, não há futuro)
+        alvo = recompensa + gamma * np.max(Q[novo_estado]) * (not terminou)
+        Q[estado, acao] += alpha * (alvo - Q[estado, acao])
+
+        estado = novo_estado</code></pre>
+    <p class="nota-codigo">O notebook completo trata empates na tabela e mede o desempenho: <a href="notebooks/q_learning_frozenlake.ipynb">ver no repositório</a> ou <a href="https://colab.research.google.com/github/USUARIO/REPOSITORIO/blob/main/notebooks/q_learning_frozenlake.ipynb">abrir no Google Colab</a>.</p>
+
+    <h3>O que o agente aprendeu</h3>
+    <p>Para ter uma base de comparação, rodamos primeiro um agente que escolhe ações ao acaso: ele chegou ao objetivo em apenas <strong>1%</strong> de 1.000 tentativas. Depois de 2.000 episódios de treino, o agente com Q-learning acertou <strong>100%</strong> das vezes.</p>
+
+    <figure>
+      <svg viewBox="0 0 600 270" role="img" aria-labelledby="fig2-titulo fig2-desc">
+        <title id="fig2-titulo">Curva de aprendizado</title>
+        <desc id="fig2-desc">A taxa de sucesso começa perto de zero, sobe de forma irregular entre os episódios 400 e 1500 e se estabiliza perto de 100% no fim do treino.</desc>
+        <line x1="50" y1="220" x2="590" y2="220" class="svg-eixo"/>
+        <line x1="50" y1="20" x2="50" y2="220" class="svg-eixo"/>
+        <line x1="50" y1="120" x2="590" y2="120" class="svg-grade"/>
+        <line x1="50" y1="20" x2="590" y2="20" class="svg-grade"/>
+        <text x="42" y="224" text-anchor="end" class="svg-texto-peq">0%</text>
+        <text x="42" y="124" text-anchor="end" class="svg-texto-peq">50%</text>
+        <text x="42" y="24" text-anchor="end" class="svg-texto-peq">100%</text>
+        <text x="50" y="240" text-anchor="middle" class="svg-texto-peq">0</text>
+        <text x="320" y="240" text-anchor="middle" class="svg-texto-peq">1000</text>
+        <text x="590" y="240" text-anchor="middle" class="svg-texto-peq">2000</text>
+        <text x="320" y="262" text-anchor="middle" class="svg-texto-peq">episódio de treino</text>
+        <polyline transform="translate(27,0)" class="svg-curva" points="50,218 59,216 67,218 76,214 85,212 93,208 102,212 111,206 119,198 128,188 137,188 146,184 154,176 163,182 172,186 180,192 189,180 198,174 206,174 215,172 224,154 233,148 241,134 250,144 258,142 267,146 276,138 285,128 293,124 302,116 311,118 319,110 328,106 337,104 345,100 354,94 363,90 372,80 380,78 389,78 398,82 406,74 415,66 424,48 432,40 441,38 450,38 459,38 467,36 476,34 485,26 493,26 502,22 511,22 519,22 528,28 537,32 545,30 554,26 563,28"/>
+      </svg>
+      <figcaption><strong>Figura 2.</strong> Taxa de sucesso durante o treino (média móvel de 100 episódios). O agente leva centenas de tentativas para encontrar o objetivo pela primeira vez; depois disso, a melhora é rápida. Ainda há erros no fim porque o agente continua explorando 5% das vezes.</figcaption>
+    </figure>
+
+    <p>Também podemos "ler" a tabela Q: para cada casa, desenhamos a seta da ação com maior valor. O resultado é a política aprendida, um mapa de como agir em qualquer posição.</p>
+
+    <figure>
+      <svg viewBox="0 0 240 240" role="img" aria-labelledby="fig3-titulo fig3-desc" class="fig-pequena">
+        <title id="fig3-titulo">Política aprendida no FrozenLake</title>
+        <desc id="fig3-desc">Grade 4 por 4. Partindo do canto superior esquerdo, as setas descem pela primeira coluna até a terceira linha, seguem para a direita, descem e terminam no objetivo no canto inferior direito, desviando dos quatro buracos.</desc>
+        <g class="svg-grade-lago">
+          <rect x="0" y="0" width="60" height="60"/><rect x="60" y="0" width="60" height="60"/><rect x="120" y="0" width="60" height="60"/><rect x="180" y="0" width="60" height="60"/>
+          <rect x="0" y="60" width="60" height="60"/><rect x="60" y="60" width="60" height="60" class="buraco"/><rect x="120" y="60" width="60" height="60"/><rect x="180" y="60" width="60" height="60" class="buraco"/>
+          <rect x="0" y="120" width="60" height="60"/><rect x="60" y="120" width="60" height="60"/><rect x="120" y="120" width="60" height="60"/><rect x="180" y="120" width="60" height="60" class="buraco"/>
+          <rect x="0" y="180" width="60" height="60" class="buraco"/><rect x="60" y="180" width="60" height="60"/><rect x="120" y="180" width="60" height="60"/><rect x="180" y="180" width="60" height="60" class="objetivo"/>
+        </g>
+        <g class="svg-setas" text-anchor="middle">
+          <text x="30" y="40" class="caminho">↓</text><text x="90" y="40">←</text><text x="150" y="40">↓</text><text x="210" y="40">←</text>
+          <text x="30" y="100" class="caminho">↓</text><text x="90" y="100">H</text><text x="150" y="100">↓</text><text x="210" y="100">H</text>
+          <text x="30" y="160" class="caminho">→</text><text x="90" y="160" class="caminho">→</text><text x="150" y="160" class="caminho">↓</text><text x="210" y="160">H</text>
+          <text x="30" y="220">H</text><text x="90" y="220">→</text><text x="150" y="220" class="caminho">→</text><text x="210" y="220">G</text>
+        </g>
+      </svg>
+      <figcaption><strong>Figura 3.</strong> A política aprendida. As setas destacadas formam o caminho que o agente segue a partir do início; H são buracos e G é o objetivo. Ninguém programou esse trajeto: ele surgiu das recompensas.</figcaption>
+    </figure>
+  </section>
+
+  <section id="erros">
+    <h2>Erros comuns e limitações</h2>
+    <p>O exemplo acima funciona muito bem, mas é um caso fácil de propósito. Vale ser honesto sobre onde o método tropeça.</p>
+
+    <h3>Quando o mundo é incerto</h3>
+    <p>Ligando o escorregão (<code>is_slippery=True</code>), cada ação só vai na direção pretendida em um terço das vezes. Com o mesmo algoritmo, o agente precisou de <strong>20.000 episódios</strong> (dez vezes mais) e chegou a cerca de <strong>75%</strong> de sucesso. Isso não é defeito do treino: em um lago escorregadio, nem a melhor estratégia possível acerta sempre.</p>
+
+    <h3>Quando há estados demais</h3>
+    <p>A tabela Q tem uma linha por estado. No FrozenLake 4×4 são 16. Em um jogo de Atari, cada combinação de pixels na tela seria um estado diferente, e a tabela não caberia em nenhuma memória. Para esses casos, troca-se a tabela por uma rede neural que <em>estima</em> os valores Q: é a ideia do <strong>Deep Q-Network (DQN)</strong>, que aprendeu a jogar dezenas de jogos de Atari a partir da imagem da tela <a href="#ref-mnih" class="cit">[4]</a>.</p>
+
+    <h3>Armadilhas frequentes</h3>
+    <ul>
+      <li><strong>Reduzir o epsilon cedo demais.</strong> O agente para de explorar e se contenta com um caminho ruim.</li>
+      <li><strong>Recompensa esparsa.</strong> Se o sinal só aparece no final, o início do treino é uma caminhada às cegas. No nosso exemplo, isso explica as centenas de episódios iniciais quase sem progresso.</li>
+      <li><strong>Hiperparâmetros sensíveis.</strong> Pequenas mudanças em α, γ ou no ritmo do epsilon alteram bastante o resultado. Rode com sementes diferentes antes de tirar conclusões.</li>
+      <li><strong>Recompensa mal desenhada.</strong> O agente otimiza exatamente o que você recompensa, não o que você quis dizer. Se andar em círculos render pontos, ele vai andar em círculos.</li>
+    </ul>
+  </section>
+
+  <section id="comecar">
+    <h2>Como começar na área</h2>
+    <p>Para quem vem de TI, um caminho possível é: reproduzir este notebook e alterar os hiperparâmetros; implementar o SARSA (muda uma linha); testar o mapa 8×8; e, então, passar para um ambiente com estados contínuos, como o CartPole, onde a tabela já não serve e o DQN entra em cena.</p>
+    <p>O livro de Sutton e Barto <a href="#ref-sutton" class="cit">[2]</a> é a referência clássica e está disponível gratuitamente. Para a parte prática, o curso de Deep RL do Hugging Face e a documentação do Gymnasium são bons pontos de partida (veja os links abaixo).</p>
+  </section>
+
+  <section id="links">
+    <h2>Para ler depois</h2>
+    <ul class="links">
+      <li><a href="http://incompleteideas.net/book/the-book-2nd.html">Sutton e Barto, <em>Reinforcement Learning: An Introduction</em></a><br><span>O livro-texto da área, gratuito. Os capítulos 1 e 6 cobrem tudo o que vimos aqui.</span></li>
+      <li><a href="https://huggingface.co/learn/deep-rl-course/unit0/introduction">Hugging Face, Deep Reinforcement Learning Course</a><br><span>Curso gratuito e prático que vai do Q-learning ao PPO, com notebooks executáveis.</span></li>
+      <li><a href="https://gymnasium.farama.org/environments/toy_text/frozen_lake/">Gymnasium, documentação do FrozenLake</a><br><span>Detalhes do ambiente que usamos: mapas, regras do escorregão e recompensas.</span></li>
+      <li><a href="https://spinningup.openai.com/en/latest/spinningup/rl_intro.html">OpenAI Spinning Up, Key Concepts in RL</a><br><span>Resumo enxuto dos conceitos e da notação, útil para ler artigos científicos da área.</span></li>
+      <li><a href="https://developer.ibm.com/articles/cc-reinforcement-learning-train-software-agent/">IBM Developer, Train a software agent with reinforcement learning</a><br><span>Outra explicação passo a passo do Q-learning, com uma perspectiva corporativa.</span></li>
+    </ul>
+  </section>
+
+  <section id="referencias">
+    <h2>Referências</h2>
+    <ol class="referencias">
+      <li id="ref-watkins">WATKINS, C. J. C. H.; DAYAN, P. Q-learning. <em>Machine Learning</em>, v. 8, p. 279–292, 1992. <a href="https://doi.org/10.1007/BF00992698">doi:10.1007/BF00992698</a>.</li>
+      <li id="ref-sutton">SUTTON, R. S.; BARTO, A. G. <em>Reinforcement Learning: An Introduction</em>. 2. ed. Cambridge: MIT Press, 2018. <a href="http://incompleteideas.net/book/the-book-2nd.html">Disponível online</a>.</li>
+      <li id="ref-gymnasium">FARAMA FOUNDATION. <em>Gymnasium: Frozen Lake</em>. Documentação. <a href="https://gymnasium.farama.org/environments/toy_text/frozen_lake/">gymnasium.farama.org</a>.</li>
+      <li id="ref-mnih">MNIH, V. et al. Human-level control through deep reinforcement learning. <em>Nature</em>, v. 518, p. 529–533, 2015. <a href="https://doi.org/10.1038/nature14236">doi:10.1038/nature14236</a>.</li>
+    </ol>
+  </section>
+
+  <section id="autores">
+    <h2>Autores</h2>
+    <div class="cartoes">
+      <div class="cartao">
+        <img src="images/davi.jpg" alt="Foto de Davi Gama dos Santos" width="96" height="96">
+        <h3>Davi Gama dos Santos</h3>
+        <p>Sistemas de Informação, último semestre. Interesse em inteligência artificial e segurança de aplicações web.</p>
+        <p class="perfis"><a href="https://github.com/USUARIO">GitHub</a> · <a href="https://www.linkedin.com/in/USUARIO">LinkedIn</a></p>
+      </div>
+      <div class="cartao">
+        <img src="images/diogo.jpg" alt="Foto de Diogo Gomes Barbosa" width="96" height="96">
+        <h3>Diogo Gomes Barbosa</h3>
+        <p>Curso, Xº semestre. Interesse em [área de interesse].</p>
+        <p class="perfis"><a href="https://github.com/USUARIO">GitHub</a> · <a href="https://www.linkedin.com/in/USUARIO">LinkedIn</a></p>
+      </div>
+      <div class="cartao">
+        <img src="images/eudenis.jpg" alt="Foto de Eudenis de Souza Vieira" width="96" height="96">
+        <h3>Eudenis de Souza Vieira</h3>
+        <p>Curso, Xº semestre. Interesse em [área de interesse].</p>
+        <p class="perfis"><a href="https://github.com/USUARIO">GitHub</a> · <a href="https://www.linkedin.com/in/USUARIO">LinkedIn</a></p>
+      </div>
+      <div class="cartao">
+        <img src="images/gabriel.jpg" alt="Foto de Gabriel Januário Alves" width="96" height="96">
+        <h3>Gabriel Januário Alves</h3>
+        <p>Curso, Xº semestre. Interesse em [área de interesse].</p>
+        <p class="perfis"><a href="https://github.com/USUARIO">GitHub</a> · <a href="https://www.linkedin.com/in/USUARIO">LinkedIn</a></p>
+      </div>
+      <div class="cartao">
+        <img src="images/joao.jpg" alt="Foto de João Pedro Barreto da Silva" width="96" height="96">
+        <h3>João Pedro Barreto da Silva</h3>
+        <p>Curso, Xº semestre. Interesse em [área de interesse].</p>
+        <p class="perfis"><a href="https://github.com/USUARIO">GitHub</a> · <a href="https://www.linkedin.com/in/USUARIO">LinkedIn</a></p>
+      </div>
+    </div>
+    <p class="aviso">As opiniões expressas neste artigo são dos autores.</p>
+  </section>
+
+</article>
+</main>
+
+<footer class="rodape">
+  <p>Texto licenciado sob <a href="https://creativecommons.org/licenses/by/4.0/deed.pt-br">CC BY 4.0</a>; código sob licença MIT.</p>
+  <p>Contato: pelas <a href="https://github.com/USUARIO/REPOSITORIO/issues">issues do repositório</a> · Última revisão: <time datetime="2026-10-03">03/10/2026</time></p>
+  <p><a href="https://github.com/USUARIO/REPOSITORIO">Código-fonte no GitHub</a></p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+</body>
+</html>
