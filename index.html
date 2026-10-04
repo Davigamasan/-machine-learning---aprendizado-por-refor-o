@@ -160,8 +160,7 @@ for ep in range(episodios):
         Q[estado, acao] += alpha * (alvo - Q[estado, acao])
 
         estado = novo_estado</code></pre>
-    <p class="nota-codigo">O notebook completo trata empates na tabela e mede o desempenho: <a href="notebooks/q_learning_frozenlake.ipynb">ver no repositório</a> ou <a href="https://colab.research.google.com/github/USUARIO/REPOSITORIO/blob/main/notebooks/q_learning_frozenlake.ipynb">abrir no Google Colab</a>.</p>
-
+    <p class="nota-codigo">O notebook completo trata empates na tabela e mede o desempenho: <a href="https://github.com/Davigamasan/-machine-learning---aprendizado-por-refor-o/blob/main/notebooks/q_learning_frozenlake.ipynb">ver no GitHub</a> ou <a href="https://colab.research.google.com/github/Davigamasan/-machine-learning---aprendizado-por-refor-o/blob/main/notebooks/q_learning_frozenlake.ipynb">abrir no Google Colab</a>.</p>
     <h3>O que o agente aprendeu</h3>
     <p>Para ter uma base de comparação, rodamos primeiro um agente que escolhe ações ao acaso: ele chegou ao objetivo em apenas <strong>1%</strong> de 1.000 tentativas. Depois de 2.000 episódios de treino, o agente com Q-learning acertou <strong>100%</strong> das vezes.</p>
 
