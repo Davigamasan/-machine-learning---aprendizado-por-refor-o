@@ -36,8 +36,13 @@ Testado com Python 3.12, gymnasium 1.3.0, numpy 2.4.4 e matplotlib 3.10.8.
 - Destaque de sintaxe: [Prism](https://prismjs.com/) (licença MIT).
 - Referências do artigo: Watkins e Dayan (1992), Sutton e Barto (2018), documentação do Gymnasium, Mnih et al. (2015).
 
-## Lighthouse (opcional)
-| Desempenho | Acessibilidade | Boas práticas | SEO |
+## Lighthouse
+Auditoria feita em 04/10/2026 com o PageSpeed Insights.
+
+| Dispositivo | Desempenho | Acessibilidade | Boas práticas | SEO |
+|---|---|---|---|---|
+| Celular | 100 | 100 | 100 | 100 |
+| Computador | 100 | 100 | 100 | 100 |
 
 ## Licença
 Texto e figuras sob CC BY 4.0. Código sob MIT (ver `LICENSE`).
