@@ -2,7 +2,7 @@
 
 Artigo técnico sobre aprendizado por reforço, com foco no algoritmo Q-learning aplicado ao ambiente FrozenLake.
 
-**Página publicada:** https://USUARIO.github.io/REPOSITORIO/
+**Página publicada:** (https://davigamasan.github.io/-machine-learning---aprendizado-por-refor-o/)
 
 ## Autores
 - Davi Gama dos Santos ([GitHub](https://github.com/Davigamasan) · [LinkedIn](www.linkedin.com/in/davigama))
