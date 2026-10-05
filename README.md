@@ -2,10 +2,10 @@
 
 Artigo técnico sobre aprendizado por reforço, com foco no algoritmo Q-learning aplicado ao ambiente FrozenLake.
 
-**Página publicada:** (https://davigamasan.github.io/-machine-learning---aprendizado-por-refor-o/)
+**Página publicada:** https://davigamasan.github.io/-machine-learning---aprendizado-por-refor-o/
 
 ## Autores
-- Davi Gama dos Santos ([GitHub](https://github.com/Davigamasan) · [LinkedIn](www.linkedin.com/in/davigama))
+- Davi Gama dos Santos ([GitHub](https://github.com/Davigamasan) · [LinkedIn](https://www.linkedin.com/in/davigama))
 - Diogo Gomes Barbosa ([GitHub](https://github.com/USUARIO) · [LinkedIn](https://www.linkedin.com/in/USUARIO))
 - Eudenis de Souza Vieira ([GitHub](https://github.com/USUARIO) · [LinkedIn](https://www.linkedin.com/in/USUARIO))
 - Gabriel Januário Alves ([GitHub](https://github.com/USUARIO) · [LinkedIn](https://www.linkedin.com/in/USUARIO))
@@ -18,7 +18,7 @@ css/style.css                           estilos
 images/                                 fotos dos autores
 notebooks/q_learning_frozenlake.ipynb   código completo do exemplo (já executado)
 LICENSE                                 licença do código (MIT)
-quadro-de-observacao                    observações conforme enunciado da atividade
+quadro-de-observacao.md                 observações conforme enunciado da atividade
 ```
 
 ## Como rodar localmente
@@ -45,12 +45,11 @@ Auditoria feita em 04/10/2026 com o PageSpeed Insights.
 | Celular | 100 | 100 | 100 | 100 |
 | Computador | 100 | 100 | 100 | 100 |
 
+## Autoria e privacidade
+Cada integrante autorizou por escrito, por meio de formulário preenchido em DD/MM/2026, a publicação dos seguintes dados: nome, foto, mini-bio (curso, semestre e área de interesse) e links públicos de GitHub e LinkedIn. Nenhum outro dado pessoal é publicado.
+
+As respostas do formulário ficam guardadas de forma privada pelo grupo e podem ser apresentadas ao professor. Qualquer integrante pode retirar a autorização a qualquer momento; nesse caso, seus dados são removidos da página.
+
 ## Licença
 Texto e figuras sob CC BY 4.0. Código sob MIT (ver `LICENSE`).
 Fotos dos autores: publicadas com autorização, apenas neste projeto; não estão incluídas na licença CC BY.
-
-|---|---|---|---|
-| - | - | - | - |
-
-## Licença
-Texto sob CC BY 4.0. Código sob MIT (ver `LICENSE`).
