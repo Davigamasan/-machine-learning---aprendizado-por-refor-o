@@ -6,7 +6,7 @@ Artigo técnico sobre aprendizado por reforço, com foco no algoritmo Q-learning
 
 ## Autores
 - Davi Gama dos Santos ([GitHub](https://github.com/Davigamasan) · [LinkedIn](https://www.linkedin.com/in/davigama))
-- Diogo Gomes Barbosa ([GitHub](https://github.com/USUARIO) · [LinkedIn](https://www.linkedin.com/in/USUARIO))
+- Diogo Gomes Barbosa ([GitHub](https://github.com/DiogoGomesB) · [LinkedIn](https://www.linkedin.com/in/USUARIO))
 - Eudenis de Souza Vieira ([GitHub](https://github.com/USUARIO) · [LinkedIn](https://www.linkedin.com/in/USUARIO))
 - Gabriel Januário Alves ([GitHub](https://github.com/USUARIO) · [LinkedIn](https://www.linkedin.com/in/USUARIO))
 - João Pedro Barreto da Silva ([GitHub](https://github.com/USUARIO) · [LinkedIn](https://www.linkedin.com/in/USUARIO))
