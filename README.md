@@ -18,6 +18,7 @@ css/style.css                           estilos
 images/                                 fotos dos autores
 notebooks/q_learning_frozenlake.ipynb   código completo do exemplo (já executado)
 LICENSE                                 licença do código (MIT)
+quadro-de-observacao                    observações conforme enunciado da atividade
 ```
 
 ## Como rodar localmente
