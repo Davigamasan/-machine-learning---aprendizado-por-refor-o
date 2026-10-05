@@ -5,7 +5,7 @@ Artigo técnico sobre aprendizado por reforço, com foco no algoritmo Q-learning
 **Página publicada:** https://USUARIO.github.io/REPOSITORIO/
 
 ## Autores
-- Davi Gama dos Santos ([GitHub](https://github.com/USUARIO) · [LinkedIn](www.linkedin.com/in/davigama))
+- Davi Gama dos Santos ([GitHub](https://github.com/Davigamasan) · [LinkedIn](www.linkedin.com/in/davigama))
 - Diogo Gomes Barbosa ([GitHub](https://github.com/USUARIO) · [LinkedIn](https://www.linkedin.com/in/USUARIO))
 - Eudenis de Souza Vieira ([GitHub](https://github.com/USUARIO) · [LinkedIn](https://www.linkedin.com/in/USUARIO))
 - Gabriel Januário Alves ([GitHub](https://github.com/USUARIO) · [LinkedIn](https://www.linkedin.com/in/USUARIO))
