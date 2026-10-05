@@ -9,7 +9,7 @@ Artigo técnico sobre aprendizado por reforço, com foco no algoritmo Q-learning
 - Diogo Gomes Barbosa ([GitHub](https://github.com/DiogoGomesB) · [LinkedIn](https://www.linkedin.com/in/diogo-gomesb/))
 - Eudenis de Souza Vieira ([GitHub](https://github.com/Eudenis-dev) · [LinkedIn](https://www.linkedin.com/in/eudenis-vieira-72507b311/?isSelfProfile=true))
 - Gabriel Januário Alves ([GitHub](https://github.com/gabriel-januario891) · [LinkedIn](https://www.linkedin.com/in/gabriel-alves-1a50611aa/?isSelfProfile=true))
-- João Pedro Barreto da Silva ([GitHub](https://github.com/USUARIO) · [LinkedIn](https://www.linkedin.com/in/USUARIO))
+- João Pedro Barreto da Silva ([GitHub](https://github.com/JoaoPedro19102) · [LinkedIn](https://www.linkedin.com/in/jo%C3%A3o-pedro-barreto-b5a439205/?isSelfProfile=false))
 
 ## Estrutura
 ```
