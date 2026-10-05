@@ -46,7 +46,7 @@ Auditoria feita em 04/10/2026 com o PageSpeed Insights.
 | Computador | 100 | 100 | 100 | 100 |
 
 ## Autoria e privacidade
-Cada integrante autorizou por escrito, por meio de formulário preenchido em DD/MM/2026, a publicação dos seguintes dados: nome, foto, mini-bio (curso, semestre e área de interesse) e links públicos de GitHub e LinkedIn. Nenhum outro dado pessoal é publicado.
+Cada integrante autorizou por escrito, por meio de formulário preenchido em 05/10/2026, a publicação dos seguintes dados: nome, foto, mini-bio (curso, semestre e área de interesse) e links públicos de GitHub e LinkedIn. Nenhum outro dado pessoal é publicado.
 
 As respostas do formulário ficam guardadas de forma privada pelo grupo e podem ser apresentadas ao professor. Qualquer integrante pode retirar a autorização a qualquer momento; nesse caso, seus dados são removidos da página.
 
